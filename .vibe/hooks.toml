@@ -1,0 +1,110 @@
+# Auto-generated port of .claude/settings.json hooks to Vibe hooks.
+# CC scripts run unchanged via cc-adapter.sh (payload translation).
+
+[[hooks]]
+name = "ccgs-session-start"
+type = "session_start"
+match = 'startup'
+command = ".vibe/hooks/cc-adapter.sh session-start.sh"
+timeout = 20.0
+description = "CCGS hook session-start.sh"
+
+[[hooks]]
+name = "ccgs-detect-gaps"
+type = "session_start"
+match = 'startup'
+command = ".vibe/hooks/cc-adapter.sh detect-gaps.sh"
+timeout = 10.0
+description = "CCGS hook detect-gaps.sh"
+
+[[hooks]]
+name = "ccgs-validate-commit"
+type = "pre_tool"
+match = 're:bash|process_start'
+command = ".vibe/hooks/cc-adapter.sh validate-commit.sh"
+timeout = 15.0
+description = "CCGS hook validate-commit.sh"
+
+[[hooks]]
+name = "ccgs-validate-push"
+type = "pre_tool"
+match = 're:bash|process_start'
+command = ".vibe/hooks/cc-adapter.sh validate-push.sh"
+timeout = 10.0
+description = "CCGS hook validate-push.sh"
+
+[[hooks]]
+name = "ccgs-validate-registry"
+type = "pre_tool"
+match = 're:file_system\.(write_file|edit)'
+command = ".vibe/hooks/cc-adapter.sh validate-registry.sh"
+timeout = 15.0
+description = "CCGS hook validate-registry.sh"
+
+[[hooks]]
+name = "ccgs-validate-write"
+type = "pre_tool"
+match = 're:file_system\.(write_file|edit)'
+command = ".vibe/hooks/cc-adapter.sh validate-write.sh"
+timeout = 15.0
+description = "CCGS hook validate-write.sh"
+
+[[hooks]]
+name = "ccgs-validate-read"
+type = "pre_tool"
+match = 'file_system.read_file'
+command = ".vibe/hooks/cc-adapter.sh validate-read.sh"
+timeout = 10.0
+description = "CCGS hook validate-read.sh"
+
+[[hooks]]
+name = "ccgs-validate-assets"
+type = "post_tool"
+match = 're:file_system\.(write_file|edit)'
+command = ".vibe/hooks/cc-adapter.sh validate-assets.sh"
+timeout = 10.0
+description = "CCGS hook validate-assets.sh"
+
+[[hooks]]
+name = "ccgs-validate-skill-change"
+type = "post_tool"
+match = 're:file_system\.(write_file|edit)'
+command = ".vibe/hooks/cc-adapter.sh validate-skill-change.sh"
+timeout = 5.0
+description = "CCGS hook validate-skill-change.sh"
+
+[[hooks]]
+name = "ccgs-notify"
+type = "notification"
+match = 're:approval_requested|turn_completed'
+command = ".vibe/hooks/cc-adapter.sh notify.sh"
+timeout = 10.0
+description = "CCGS hook notify.sh"
+
+[[hooks]]
+name = "ccgs-session-stop"
+type = "session_end"
+command = ".vibe/hooks/cc-adapter.sh session-stop.sh"
+timeout = 10.0
+description = "CCGS hook session-stop.sh"
+
+[[hooks]]
+name = "ccgs-log-agent"
+type = "pre_agent"
+command = ".vibe/hooks/cc-adapter.sh log-agent.sh"
+timeout = 5.0
+description = "CCGS hook log-agent.sh"
+
+[[hooks]]
+name = "ccgs-log-agent-stop"
+type = "post_agent"
+command = ".vibe/hooks/cc-adapter.sh log-agent-stop.sh"
+timeout = 5.0
+description = "CCGS hook log-agent-stop.sh"
+
+[[hooks]]
+name = "ccgs-validate-agent-artifact"
+type = "post_agent"
+command = ".vibe/hooks/cc-adapter.sh validate-agent-artifact.sh"
+timeout = 10.0
+description = "CCGS hook validate-agent-artifact.sh"
