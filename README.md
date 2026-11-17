@@ -1,25 +1,26 @@
 <p align="center">
-  <h1 align="center">Claude Code Game Studios</h1>
+  <h1 align="center">Mistral Code Game Studios</h1>
   <p align="center">
-    Describe a game. Claude Code asks a few questions, writes a one-page brief,
+    Describe a game. Vibe asks a few questions, writes a one-page brief,
     and builds a playable browser game from it.
     <br />
     Then you change it, grow it and finish it, one step at a time.
+    <br />
+    A Mistral Vibe port of <a href="https://github.com/donchitos/claude-code-game-studios">Claude Code Game Studios</a>.
   </p>
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <a href="https://code.claude.com/docs"><img src="https://img.shields.io/badge/built%20for-Claude%20Code-f5f5f5?logo=anthropic" alt="Built for Claude Code"></a>
-  <a href="https://www.buymeacoffee.com/donchitos3"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20this%20project-FFDD00?logo=buymeacoffee&logoColor=black" alt="Buy Me a Coffee"></a>
-  <a href="https://github.com/sponsors/Donchitos"><img src="https://img.shields.io/badge/GitHub%20Sponsors-Support%20this%20project-ea4aaa?logo=githubsponsors&logoColor=white" alt="GitHub Sponsors"></a>
+  <a href="https://docs.mistral.ai/vibe/code/overview"><img src="https://img.shields.io/badge/built%20for-Mistral%20Vibe-5B4BFF" alt="Built for Mistral Vibe"></a>
+  <a href="https://github.com/donchitos/claude-code-game-studios"><img src="https://img.shields.io/badge/fork%20of-Claude%20Code%20Game%20Studios-8A8A8A" alt="Fork of Claude Code Game Studios"></a>
 </p>
 
 ---
 
 ## Make me a game
 
-Open Claude Code in a copy of this repository and say what you want:
+Open Mistral Vibe in a copy of this repository and say what you want:
 
 ```
 /prototype a fishing game where the rare fish only bite at dusk
@@ -106,7 +107,7 @@ clutter, not evidence.
 ### Prerequisites
 
 - [Git](https://git-scm.com/)
-- [Claude Code](https://code.claude.com/docs/en/setup) — the native installer is recommended (`npm install -g @anthropic-ai/claude-code` also works, on Node.js 22+)
+- [Mistral Vibe](https://docs.mistral.ai/vibe/code/overview) — install with `uv tool install mistral-vibe` (or `pipx install mistral-vibe`)
 - [Python 3](https://www.python.org/) — reads `project.yaml` for every skill and hook; without it every setting silently falls back to its default
 - Bash — runs every hook; built into macOS and Linux, and on Windows it comes with [Git for Windows](https://git-scm.com/downloads/win). Without it on Windows the hooks skip themselves, and session start says their checks are off
 - **Chrome, Edge or Chromium** — `/prototype` plays and screenshots each game in it; without one, those checks say they were not assessed
@@ -118,17 +119,19 @@ Hooks fail gracefully if optional tools are missing — you just lose validation
 
 1. **Clone or use as template**:
    ```bash
-   git clone https://github.com/Donchitos/Claude-Code-Game-Studios.git my-game
+   git clone https://github.com/AirbornePanda/Mistral-Code-Game-Studios.git my-game
    cd my-game
    ```
 
-2. **Open Claude Code in the project's root folder** (the one holding
-   `CLAUDE.md` and `project.yaml`) and start a session:
+2. **Open Mistral Vibe in the project's root folder** (the one holding
+   `AGENTS.md`, `.vibe/` and `project.yaml`) and start a session:
    ```bash
-   claude
+   vibe
    ```
-   Starting it in a subfolder such as `src/` skips the project's hooks, deny
-   rules and ask-first permission mode.
+   Vibe loads the project's skills, hooks and guard rules from `.vibe/` only
+   when the root folder is trusted — it asks once, or add the folder to
+   `~/.vibe/trusted_folders.toml`. Starting in a subfolder such as `src/`
+   skips them.
 
 3. **Type `/prototype` and your idea**, or **run `/start`**, which asks where
    you are (make me a game, an idea or none yet, clear design, existing work)
@@ -214,10 +217,19 @@ versions, and which files are safe to overwrite vs. which need a manual merge.
 ## Project Structure
 
 ```
-CLAUDE.md                           # Master configuration
+AGENTS.md                           # Master instructions (Mistral Vibe)
+CLAUDE.md                           # Master configuration (Claude Code original, kept)
+PORTING.md                          # What the Vibe port changed, and what is not portable
 project.yaml                        # Project settings: engine, modes, goal
-.claude/
-  settings.json                     # Hooks, permissions, safety rules
+.vibe/                              # Vibe-native config (this fork's edition)
+  skills/                           # 78 skills (SKILL.md), user-invocable as /<name>
+  agents/                           # 49 subagents (*.toml, agent_type = "subagent")
+  hooks.toml                        # 14 hooks; the CC scripts run via hooks/cc-adapter.sh
+  hooks/cc-adapter.sh               # Translates Vibe hook payloads to the CC format
+  hooks/cc/                         # Original CCGS hook scripts, unchanged
+  config.toml                       # Guard rules (denylist) ported from settings.json
+.claude/                            # Claude Code original, kept for CC users
+  settings.json                     # Hooks, permissions, safety rules (source of the .vibe/ port)
   agents/                           # 49 agent definitions (markdown + YAML frontmatter)
   skills/                           # 75 skills, plus three old names (a subdirectory each)
   hooks/                            # 18 scripts (bash) — 15 event hooks, two helpers they
@@ -248,7 +260,7 @@ studio-tests/                       # QA for the skills and agents themselves �
 
 ### Testing your customizations
 
-Claude Code Game Studios is a template you are meant to edit. `studio-tests/` is how
+Mistral Code Game Studios is a template you are meant to edit. `studio-tests/` is how
 you check that an edited or newly written skill still holds up — a catalog of all
 75 skills and 49 agents, per-category quality rubrics, behavioral specs, and
 templates for writing specs of your own.
@@ -265,7 +277,7 @@ It tests the *framework*, never your game — game tests live in `tests/`.
 
 ## Hooks, Permissions and Rules
 
-**Hooks** run automatically on every session:
+**Hooks** run automatically on every session. In this Vibe port the same scripts are wired in `.vibe/hooks.toml`; the Claude Code event names in the table map to Vibe events (`PreToolUse`→`pre_tool`, `PostToolUse`→`post_tool`, `SessionStart`→`session_start`, `Stop`→`session_end`, `Notification`→`notification`) via `.vibe/hooks/cc-adapter.sh`. `PreCompact` has no Vibe equivalent and is not wired.
 
 | Hook | Trigger | What It Does |
 |------|---------|--------------|
@@ -277,7 +289,7 @@ It tests the *framework*, never your game — game tests live in `tests/`.
 | `validate-assets.sh` | PostToolUse (Write/Edit) | Checks data-file JSON under `assets/`, `Assets/` or `Content/`, and asset naming in Godot's `assets/` only — exits early if the file is under none of them |
 | `session-start.sh` | Session open | Shows current branch and recent commits for orientation |
 | `detect-gaps.sh` | Session open | Detects fresh projects (suggests `/start`) and missing design docs when code or prototypes exist |
-| `pre-compact.sh` | Before compaction | Logs the compaction (its output does not reach Claude — `session-start.sh` restores context afterwards) |
+| `pre-compact.sh` | Before compaction (CC only — not wired in Vibe) | Logs the compaction (its output does not reach the agent — `session-start.sh` restores context afterwards) |
 | `notify.sh` | Permission prompt, or idle about a minute | Shows Windows toast notification via PowerShell |
 | `session-stop.sh` | Every response end, in the background | Archives `active.md` to session log and records git activity |
 | `log-agent.sh` | Agent spawned | Audit trail start — logs subagent invocation |
@@ -287,7 +299,7 @@ It tests the *framework*, never your game — game tests live in `tests/`.
 
 > **Note**: `validate-commit.sh`, `validate-push.sh`, `validate-read.sh`, `validate-write.sh`, `validate-registry.sh`, `validate-assets.sh` and `validate-skill-change.sh` fire on every Bash, PowerShell, Read, Write or Edit tool call and exit immediately (exit 0) when the command or file path is not relevant. This is normal hook behavior — not a performance concern.
 
-**Permission rules** in `settings.json` auto-allow test runs and the framework's read-only helper scripts, and block dangerous operations (force push, `rm -rf`, reading `.env` files) in both the Bash and PowerShell tools. Read-only commands such as `git status`, `git log` and `ls` need no rule: Claude Code runs them without asking. The `git` rules match anywhere after `git`, so a git command whose text only mentions `push` followed later by ` +` or ` -f`, `clean` followed by ` -f`, or `reset` followed by `--hard` — a commit message such as `git commit -m "push + pull"` included — is denied too: reword the message.
+**Permission rules** in `.vibe/config.toml` (ported from `settings.json`) auto-allow test runs and the framework's read-only helper scripts, and block dangerous operations (force push, `rm -rf`, reading `.env` files) in the Bash tool. Vibe checks the denylist before the allowlist, so the guards always win. Read-only commands such as `git status`, `git log` and `ls` need no rule: the allowlist runs them without asking. The `git` rules match anywhere after `git`, so a git command whose text only mentions `push` followed later by ` +` or ` -f`, `clean` followed by ` -f`, or `reset` followed by `--hard` — a commit message such as `git commit -m "push + pull"` included — is denied too: reword the message.
 
 ### Path-Scoped Rules
 
@@ -328,8 +340,8 @@ nine stories or features).
 | Category | Count | Description |
 |----------|-------|-------------|
 | **Agents** | 49 | Specialized subagents across design, programming, art, audio, narrative, QA, and production |
-| **Skills** | 75 | Slash commands for every workflow phase (`/prototype`, `/start`, `/design-system`, `/create-epics`, `/create-stories`, `/dev-story`, `/story-done`, etc.) |
-| **Hooks** | 15 | Automated validation on commits, pushes, asset changes, design-doc reads, writes and registries, session lifecycle, agent audit trail, and gap detection |
+| **Skills** | 78 | Slash commands for every workflow phase in Vibe (`/prototype`, `/start`, `/design-system`, `/create-epics`, `/create-stories`, `/dev-story`, `/story-done`, etc.) |
+| **Hooks** | 14 | Wired in `.vibe/hooks.toml` (the 15th, `pre-compact`, has no Vibe event): validation on commits, pushes, asset changes, design-doc reads, writes and registries, session lifecycle, agent audit trail, and gap detection |
 | **Rules** | 14 | Path-scoped coding standards enforced when editing gameplay, engine, AI, UI, network code, scene and asset files, and more |
 | **Templates** | 62 | Document templates for GDDs, UX specs, ADRs, sprint plans, HUD design, accessibility, and more |
 
@@ -357,10 +369,7 @@ Tier 3 — Specialists
   live-ops-designer    community-manager
 ```
 
-Each agent declares a model in its frontmatter: the three directors ask for
-Opus, `lead-programmer` and fifteen specialists name Sonnet, and the remaining thirty
-**inherit your session's model**. Treat the tiers as seniority of role, not as
-a billing plan — most of the studio runs on whatever model you are already using.
+In the original, each agent declares a model tier in its frontmatter (the directors ask for Opus, `lead-programmer` and fifteen specialists name Sonnet, the rest inherit). In this Vibe port every subagent runs on **your session's model** — the CC tier is kept as `cc-model` metadata in `.vibe/agents/*.toml`. Treat the tiers as seniority of role, not as a billing plan.
 
 ### Engine Specialists
 
@@ -375,7 +384,7 @@ matches your project (a web project uses the general programmers):
 
 ### Slash Commands
 
-Type `/` in Claude Code to access all 75 skills (plus three old names that point to their new ones):
+Type `/` in Vibe to access all 78 skills (75 plus three old names that point to their new ones):
 
 **Make a Game**
 `/prototype` `/cut`
@@ -463,11 +472,11 @@ This is **not** an auto-pilot system. Every agent follows a strict collaboration
 
 You stay in control. The agents provide structure and expertise, not autonomy.
 
-That is how a terminal session started at the project root behaves out of the
-box. The `guided` and `autonomous` automation settings, and Claude Code's own
-auto mode, trade some of these prompts for speed; see
-[setup-requirements.md](.claude/docs/setup-requirements.md) for the routes into
-auto mode.
+That is how a Vibe session started at the project root behaves out of the
+box. Vibe's agent modes (`ask`, `accept-edits`, and `auto-approve` via
+`--agent` / `--auto-approve`) trade some of these prompts for speed; the hooks
+and guard rules load from `.vibe/` whenever the project root is a trusted
+folder.
 
 ## Design Philosophy
 
@@ -494,18 +503,18 @@ This is a **template**, not a locked framework. Everything is meant to be custom
 
 ## Platform Support
 
-Primary development on **Windows 10** with Git Bash. The hooks and scripts are also tested on **macOS** — its stock bash 3.2 and BSD tools, with and without `jq` — and on **Linux**. All hooks use POSIX-compatible patterns (`grep -E`, not `grep -P`) and include fallbacks for missing tools. The `notify.sh` hook uses PowerShell for Windows toast notifications and is a no-op elsewhere — desktop notifications on macOS/Linux are not yet wired. Please file issues for any platform-specific breakage.
+This Vibe port is developed and tested on **Linux** and **macOS** (stock bash 3.2 and BSD tools, with and without `jq`). All hooks use POSIX-compatible patterns (`grep -E`, not `grep -P`) and run through Vibe's `hooks.toml` on every platform Vibe supports; the original's PowerShell deny rules apply on Windows only. The `notify.sh` hook uses PowerShell for Windows toast notifications and is a no-op elsewhere — desktop notifications on macOS/Linux are not yet wired. Please file issues for any platform-specific breakage.
 
 ## Community
 
-- **Discussions** — [GitHub Discussions](https://github.com/Donchitos/Claude-Code-Game-Studios/discussions) for questions, ideas, and showcasing what you've built
-- **Issues** — [Bug reports and feature requests](https://github.com/Donchitos/Claude-Code-Game-Studios/issues)
+- **Discussions** — [GitHub Discussions](https://github.com/AirbornePanda/Mistral-Code-Game-Studios/discussions) for questions, ideas, and showcasing what you've built with this Vibe port
+- **Issues** — [bug reports and feature requests for this port](https://github.com/AirbornePanda/Mistral-Code-Game-Studios/issues); framework-level bugs go to the [upstream repo](https://github.com/Donchitos/Claude-Code-Game-Studios/issues)
 
 ---
 
 ## Supporting This Project
 
-Claude Code Game Studios is free and open source. If it saves you time or helps you ship your game, consider supporting continued development:
+This project is free and open source (MIT). It is a fork of [Claude Code Game Studios](https://github.com/donchitos/claude-code-game-studios) by Donchitos — if it saves you time or helps you ship your game, consider supporting the original's continued development:
 
 <p>
   <a href="https://www.buymeacoffee.com/donchitos3"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee"></a>
@@ -516,12 +525,12 @@ Claude Code Game Studios is free and open source. If it saves you time or helps 
 - **[Buy Me a Coffee](https://www.buymeacoffee.com/donchitos3)** — one-time support
 - **[GitHub Sponsors](https://github.com/sponsors/Donchitos)** — recurring support through GitHub
 
-Sponsorships help fund time spent maintaining skills, adding new agents, keeping up with Claude Code and engine API changes, and responding to community issues.
+Sponsorships help fund time spent maintaining the original's skills, adding new agents, keeping up with Claude Code and engine API changes, and responding to community issues.
 
 ---
 
-*Built for Claude Code. Maintained and extended — contributions welcome via [GitHub Discussions](https://github.com/Donchitos/Claude-Code-Game-Studios/discussions).*
+*Built for Mistral Vibe — a fork of Claude Code Game Studios (Donchitos). Contributions welcome via [GitHub Discussions](https://github.com/AirbornePanda/Mistral-Code-Game-Studios/discussions).*
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License — see [LICENSE](LICENSE). This repository is a fork of [Claude Code Game Studios](https://github.com/donchitos/claude-code-game-studios) by Donchitos (Copyright (c) 2026 Donchitos) and is adapted for Mistral Vibe by Julian Sauer (Copyright (c) 2026 Julian Sauer). Both copyright notices are kept in [LICENSE](LICENSE), as MIT requires: the copyright and permission notice must be included in all copies or substantial portions of the software. MIT otherwise allows forking, modification, distribution and commercial use with no further obligations.
