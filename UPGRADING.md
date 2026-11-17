@@ -1,7 +1,11 @@
-# Upgrading Claude Code Game Studios
+# Upgrading Mistral Code Game Studios (Vibe edition)
 
+Fork of [Claude Code Game Studios](https://github.com/donchitos/claude-code-game-studios).
 This guide covers upgrading your existing game project repo from one version
-of the template to the next.
+of the template to the next. It describes the upstream template (`.claude/`);
+the Vibe port in `.vibe/` follows the same upstream via the `upstream-sync`
+workflow — see [PORTING.md](PORTING.md) for the mapping and re-run the port
+when upstream changes `.claude/`.
 
 **Find your current version** — use the first of these that applies:
 

@@ -1,5 +1,13 @@
 # Changelog
 
+What's new in **Mistral Code Game Studios (Vibe edition)** — a fork of
+[Claude Code Game Studios](https://github.com/donchitos/claude-code-game-studios).
+The Vibe port (`.vibe/`, `AGENTS.md`) is documented in [PORTING.md](PORTING.md).
+Everything below the next line is the upstream changelog, kept in sync by the
+`upstream-sync` workflow.
+
+---
+
 What's new in Claude Code Game Studios, written for the people using it.
 
 See [UPGRADING.md](UPGRADING.md) for step-by-step upgrade instructions, and

@@ -1,5 +1,10 @@
 # Security Policy
 
+> This is the **Mistral Vibe edition** (this fork). The upstream policy lives at
+> [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios).
+> The Vibe port adds `.vibe/hooks.toml`, `.vibe/hooks/cc-adapter.sh` and
+> `.vibe/config.toml` — the same rules apply to them.
+
 ## Supported Versions
 
 Security fixes go to the newest 1.3.x release only. Forks and
@@ -11,7 +16,7 @@ older releases are not supported.
 
 Use GitHub's private vulnerability reporting instead:
 
-**[Report a vulnerability →](https://github.com/Donchitos/Claude-Code-Game-Studios/security/advisories/new)**
+**[Report a vulnerability →](https://github.com/AirbornePanda/Mistral-Code-Game-Studios/security/advisories/new)** (framework-level issues in the `.claude/` original: [upstream](https://github.com/Donchitos/Claude-Code-Game-Studios/security/advisories/new))
 
 Include as much detail as possible:
 - Description of the vulnerability and what it affects
@@ -31,10 +36,10 @@ AI agents that run directly on your machine. Security issues are primarily about
 contributed code that executes in users' environments without their awareness.
 
 ### High Severity
-- Hooks (`.claude/hooks/*.sh`) that execute malicious or undisclosed shell
+- Hooks (`.vibe/hooks/**`, `.claude/hooks/*.sh`) that execute malicious or undisclosed shell
   commands on user machines
 - Skills or agents that exfiltrate environment variables, API keys, or secrets
-- Prompt injection via skill or agent definitions that causes Claude to bypass
+- Prompt injection via skill or agent definitions that causes the agent to bypass
   safety measures or take unauthorized destructive actions
 - Contributions that silently alter behavior in ways users cannot audit
 
@@ -46,9 +51,8 @@ contributed code that executes in users' environments without their awareness.
   approval step
 
 ### Out of Scope
-- The behavior of Claude or the Claude Code CLI itself
-  (report to [Anthropic](https://www.anthropic.com/security))
-- Bugs in the user's Claude Code installation or editor extension
+- The behavior of the agent CLI itself — Vibe (report to [Mistral](https://docs.mistral.ai/vibe/code/overview)) or, for the `.claude/` original, Claude Code (report to [Anthropic](https://www.anthropic.com/security))
+- Bugs in the user's Vibe (or Claude Code) installation or editor extension
 - Theoretical vulnerabilities with no realistic attack path
 - Issues requiring physical access to the user's machine
 

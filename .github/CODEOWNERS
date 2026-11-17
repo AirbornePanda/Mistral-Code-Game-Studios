@@ -3,14 +3,19 @@
 # Last match wins. Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
 # Default owner for everything
-*                           @Donchitos
+*                           @AirbornePanda
 
 # Core configuration — owner review required
-CLAUDE.md                   @Donchitos
-.claude/                    @Donchitos
-settings.json               @Donchitos
+CLAUDE.md                   @AirbornePanda
+.claude/                    @AirbornePanda
+settings.json               @AirbornePanda
 
 # Skills and agents — high-impact, review carefully
-.claude/skills/             @Donchitos
-.claude/agents/             @Donchitos
-.claude/hooks/              @Donchitos
+.claude/skills/             @AirbornePanda
+.claude/agents/             @AirbornePanda
+.claude/hooks/              @AirbornePanda
+
+# Vibe port — this fork's edition
+.vibe/                      @AirbornePanda
+AGENTS.md                   @AirbornePanda
+PORTING.md                  @AirbornePanda

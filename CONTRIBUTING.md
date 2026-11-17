@@ -1,6 +1,6 @@
-# Contributing to Claude Code Game Studios
+# Contributing to Mistral Code Game Studios (Vibe edition)
 
-CCGS is a coordination framework for indie game development using Claude Code.
+This is the Mistral Vibe edition of [Claude Code Game Studios](https://github.com/donchitos/claude-code-game-studios) (CCGS) — a coordination framework for indie game development. Framework-level contributions belong in the upstream repo; PRs here should target the Vibe port (`.vibe/`, `AGENTS.md`, `PORTING.md`) or this fork's docs and templates.
 Contributions are welcome — bug fixes, new skills that fill a real gap, agent
 improvements, and hook fixes. PRs that don't fit the framework's direction will
 be closed without lengthy explanation.
@@ -25,22 +25,32 @@ merged here — keep those in your own repo.
 These are the things that will get your PR rejected if you miss them.
 
 **Skill files**
-- Skills live in `.claude/skills/<name>/SKILL.md` — the subdirectory format is
-  required. Flat `.md` files are silently ignored by Claude Code.
-- SKILL.md must include YAML frontmatter: `name`, `description`,
-  `argument-hint`, `allowed-tools`, and `model`
-- Model tier: `haiku` for read-only status checks, `opus` for multi-document
-  synthesis and phase gates, `sonnet` for everything else
+- In this Vibe port, skills live in `.vibe/skills/<name>/SKILL.md` — the
+  subdirectory format is required; flat `.md` files are ignored. The original
+  `.claude/skills/<name>/SKILL.md` stays for Claude Code users and should be
+  kept in sync.
+- SKILL.md must include YAML frontmatter: `name` and `description` (required),
+  plus optionally `user-invocable`, `disable-model-invocation`, `allowed-tools`
+  (Vibe tool names) and `metadata` (`argument-hint`, `cc-model`)
+- Model tier: Vibe runs every skill on the session model; keep the CC tier
+  (`haiku`/`sonnet`/`opus`) in `metadata.cc-model` for reference
 
 **Hooks**
 - Use `grep -E` — never `grep -P` (Perl regex breaks on Windows Git Bash)
 - Include fallbacks for systems without `jq` or `python` installed
 - Hooks run on every session start — they must exit quickly and gracefully
   (`exit 0`) when not applicable
+- In this Vibe port the original `.claude/hooks/*.sh` scripts are wired in
+  `.vibe/hooks.toml` and run unchanged through `.vibe/hooks/cc-adapter.sh` —
+  edit the script, not the wiring
 
 **Agents**
-- New agents must include a **Collaboration Protocol** section that describes
-  how the agent asks questions and defers decisions to the user
+- In this Vibe port, agents are `.vibe/agents/<name>.toml` with
+  `agent_type = "subagent"`; the original `.claude/agents/<name>.md` stays for
+  Claude Code users
+- New agents must include a **Collaboration Protocol** section in their
+  instructions that describes how the agent asks questions and defers decisions
+  to the user
 - Agents must not modify files outside their documented domain without explicit
   user delegation
 
@@ -61,7 +71,7 @@ or writing files unilaterally, it won't be merged.
 
 ## Testing Your Changes
 
-Run it in a Claude Code session and confirm it works end-to-end. For skills,
+Run it in a Vibe session (or Claude Code, for the `.claude/` original) and confirm it works end-to-end. For skills,
 invoke the skill and verify the output matches what the skill claims to do.
 For hooks, trigger the relevant event and confirm the hook fires correctly
 and exits cleanly.
@@ -90,6 +100,8 @@ Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`
 
 ## Platform Compatibility
 
-CCGS must work on Windows (Git Bash), macOS, and Linux. If your hook or
+The framework must work on Windows (Git Bash), macOS, and Linux. This Vibe
+port is developed and tested on Linux and macOS; hooks stay POSIX and run
+through Vibe's `hooks.toml` on every platform Vibe supports. If your hook or
 script uses anything platform-specific, it will be rejected. When in doubt,
 test on Windows.
